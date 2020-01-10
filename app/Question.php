@@ -33,4 +33,16 @@ class Question extends Model
         # code...
         return $this->created_at->diffForHumans();
     }
+
+    public function getStatusAttribute()
+    {
+        # code...
+        if($this->answers>0){
+            if($this->best_answer_id){
+                return "answered-accepted";
+            }
+            return "answered";
+        }
+        return "unanswered";
+    }
 }
