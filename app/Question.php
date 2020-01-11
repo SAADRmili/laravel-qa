@@ -24,7 +24,7 @@ class Question extends Model
     public function getUrlAttribute()
     {
         # code...
-       return route("questions.show",$this->id);
+       return route("questions.show",$this->slug);
     }
 
 
@@ -43,5 +43,11 @@ class Question extends Model
             return "answered";
         }
         return "unanswered";
+    }
+
+    public function getBodyHtmlAttribute()
+    {
+        # code...
+        return  \Parsedown::instance()->text($this->body);
     }
 }
