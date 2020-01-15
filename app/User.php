@@ -57,4 +57,35 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Question::class, 'favorites')->withTimestamps(); //, 'author_id', 'question_id');
     }
+
+
+    public function voteQuestions()
+    {
+        # code...
+        return $this->morphedByMany(Question::class,'votable');
+    }
+    public function voteAnswers()
+    {
+        # code...
+        return $this->morphedByMany(Answer::class,'votable');
+    }
+
+    public function voteQuestion(Question $question,$vote)
+    {
+        # code...
+       $voteQuestions= $this->voteQuestions();
+
+       if($voteQuestions->where('votable_id',$question->id)->exists()){
+           $voteQuestions->updateExistingPivot($question,['vote'=>$vote]);
+       }
+       else{
+           $voteQuestions->attach($question,['vote'=>$vote]);
+       }
+       $question->load('votes');
+       $downVotes= (int)$question->votes()->wherePivot('vote',-1)->sum('vote');
+       $upVotes= (int)$question->votes()->wherePivot('vote',1)->sum('vote');
+
+       $question->votes_count = $upVotes +$downVotes;
+       $question->save();
+    }
 }
