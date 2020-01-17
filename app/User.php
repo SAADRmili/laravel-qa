@@ -74,37 +74,31 @@ class User extends Authenticatable
     {
         # code...
        $voteQuestions= $this->voteQuestions();
-
-       if($voteQuestions->where('votable_id',$question->id)->exists()){
-           $voteQuestions->updateExistingPivot($question,['vote'=>$vote]);
-       }
-       else{
-           $voteQuestions->attach($question,['vote'=>$vote]);
-       }
-       $question->load('votes');
-       $downVotes= (int)$question->votes()->wherePivot('vote',-1)->sum('vote');
-       $upVotes= (int)$question->votes()->wherePivot('vote',1)->sum('vote');
-
-       $question->votes_count = $upVotes +$downVotes;
-       $question->save();
+        $this->_vote($voteQuestions,$question,$vote);
     }
 
     public function voteAnswer(Answer $answer,$vote)
     {
         # code...
         $voteAnswers= $this->voteAnswers();
+        $this->_vote($voteAnswers,$answer,$vote);
 
-        if($voteAnswers->where('votable_id',$answer->id)->exists()){
-            $voteAnswers->updateExistingPivot($answer,['vote'=>$vote]);
+
+    }
+    private function _vote($relationship , $model ,$vote)
+    {
+        
+        if($relationship->where('votable_id',$model->id)->exists()){
+            $relationship->updateExistingPivot($model,['vote'=>$vote]);
         }
         else{
-            $voteAnswers->attach($answer,['vote'=>$vote]);
+            $relationship->attach($model,['vote'=>$vote]);
         }
-        $answer->load('votes');
-        $downVotes= (int)$answer->votes()->wherePivot('vote',-1)->sum('vote');
-        $upVotes= (int)$answer->votes()->wherePivot('vote',1)->sum('vote');
+        $model->load('votes');
+        $downVotes= (int)$model->votes()->wherePivot('vote',-1)->sum('vote');
+        $upVotes= (int)$model->votes()->wherePivot('vote',1)->sum('vote');
  
-        $answer->votes_count = $upVotes +$downVotes;
-        $answer->save();
+        $model->votes_count = $upVotes +$downVotes;
+        $model->save();
     }
 }
