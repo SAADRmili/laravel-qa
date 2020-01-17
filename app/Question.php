@@ -48,7 +48,9 @@ class Question extends Model
     public function getBodyHtmlAttribute()
     {
         # code...
-        return  \Parsedown::instance()->text($this->body);
+
+        return clean($this->bodyHtml());
+       
     }
 
     public function answers()
@@ -85,6 +87,18 @@ class Question extends Model
     {
         # code...
         return $this->morphToMany(User::class,'votable');
+    }
+
+
+    public  function getExcerptAttribute()
+    {
+        # code...
+       return str_limit(strip_tags($this->bodyHtml()),300);
+    }
+    public function bodyHtml()
+    {
+        # code...*
+         return  \Parsedown::instance()->text($this->body);
     }
 
 }
