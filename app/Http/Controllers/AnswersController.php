@@ -7,9 +7,16 @@ use Illuminate\Http\Request;
 use App\Question;
 class AnswersController extends Controller
 {
- 
-
-
+    
+    public function __construct()
+    {
+        $this->middleware('auth')->except('index');    
+    }
+    public function index(Question $question)
+    {
+        # code...
+        return $question->answers()->with('user')->simplePaginate(3);
+    }
 
     /**
      * Store a newly created resource in storage.

@@ -24,7 +24,7 @@ Route::get('/questions/{slug}','QuestionsController@show')->name('questions.show
 
 // answers 
 
-Route::resource('questions.answers','AnswersController')->except(['index','create','show']);
+Route::resource('questions.answers','AnswersController')->except(['create','show']);
 
 Route::post('/answers/{answer}/accept','AcceptAnswersController')->name('answers.accept');
 
@@ -37,4 +37,4 @@ Route::delete('/questions/{question}/favorites', 'FavoriteController@destroy')->
 
 
 Route::post('/questions/{question}/vote','VoteQuestionController');
- Route::post('/answers/{answer}/vote','VoteAnswerController');
+Route::post('/answers/{answer}/vote','VoteAnswerController');
