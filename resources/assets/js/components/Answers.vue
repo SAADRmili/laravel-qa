@@ -6,7 +6,7 @@
               <div class="card-title">
                     <h2>{{title}}</h2>
                       <hr>
-                     <answer v-for="answer in answers" :answer="answer" :key="answer.id"></answer>
+                     <answer v-on:deleted="remove(index)" v-for="(answer,index) in answers" :answer="answer" :key="answer.id"></answer>
                 
                         <div class="text-center mt-3" v-if="nextUrl">
                             <button @click.prevent="fetch(nextUrl)" class="btn btn-outline-secondary">Load more answers</button>
@@ -39,7 +39,11 @@ export default {
                this.answers.push(... data.data);
                this.nextUrl=data.next_page_url;
             })
-        }
+        },
+        remove(index){
+            this.answers.splice(index,1);
+            this.count--;
+    },
     },
      computed:{
          title(){
