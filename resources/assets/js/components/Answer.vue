@@ -39,8 +39,11 @@
 
 
 <script>
+import Vote from './Vote.vue';
+import Userinfo from './Userinfo.vue';
 export default {
     props:['answer'],
+        components:{Vote,Userinfo},
     data(){
         return {
             editing:false,
