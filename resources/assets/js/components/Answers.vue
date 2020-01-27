@@ -1,6 +1,8 @@
 <template>
+
+<div>
     <div class="row mt-4" v-cloak v-if="count > 0">
-    <div class="col-md-12">
+        <div class="col-md-12">
         <div class="card">
             <div class="card-body">
               <div class="card-title">
@@ -14,11 +16,17 @@
                 </div>
             </div>
         </div>
+        </div>
     </div>
+    <Create @created='add' :question-id="question.id"></Create>
 </div>
+
+
 </template>
 <script>
 import Answer from './Answer.vue';
+import  Create from './NewAnswer.vue';
+
 export default {
      props:['question'],
      data(){
@@ -34,6 +42,10 @@ export default {
         this.fetch(`/questions/${this.questionId}/answers`);
     },
     methods:{
+        add(answer){
+            this.answers.push(answer);
+            this.count++;
+        },
         fetch(endpoint){
             axios.get(endpoint).then(({data})=>{
                this.answers.push(... data.data);
@@ -50,6 +62,6 @@ export default {
              return this.count +" "+ (this.count>1? 'Answers' :'Answer');
          }
      },
-     components:{ Answer}
+     components:{ Answer,Create}
 }
 </script>
